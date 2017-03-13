@@ -273,6 +273,8 @@ Pony requires one of the following versions of LLVM:
 - 3.7.1
 - 3.8.1
 - 3.9.1
+- 4.0.1
+- 5.0.0
 
 Compiling Pony is only possible on x86 and ARM (either 32 or 64 bits).
 
@@ -419,7 +421,7 @@ Build ponyc, compile and run helloworld:
 
 ```bash
 cd ~/ponyc/
-make 
+make
 ./build/release/ponyc examples/helloworld
 ./helloworld
 ```
@@ -520,7 +522,7 @@ make default_pic=true
 
 You need to have the development versions of the following installed:
 
-* LLVM 3.7.1, 3.8.1, or 3.9.1
+* LLVM 3.7.1, 3.8.1, 3.9.1, 4.0.1, or 5.0.0
 * zlib
 * ncurses
 * pcre2
@@ -595,7 +597,7 @@ Please note that on 32-bit X86, using LLVM 3.7.1 or 3.8.1 on FreeBSD currently p
 ## Building on Mac OS X
 [![Linux and OS X](https://travis-ci.org/ponylang/ponyc.svg?branch=master)](https://travis-ci.org/ponylang/ponyc)
 
-You'll need llvm 3.7.1, 3.8.1 or 3.9.1 and the pcre2 library to build Pony. You can use either homebrew or MacPorts to install your dependencies. Please note that llvm 3.9.1 is not available via homebrew. As such, the instructions below install 3.8.1
+You'll need llvm 3.7.1, 3.8.1, 3.9.1, 4.0.1, or 5.0.0 and the pcre2 library to build Pony. You can use either homebrew or MacPorts to install your dependencies. Please note that llvm 3.9.1 is not available via homebrew. As such, the instructions below install 3.8.1
 
 Installation via [homebrew](http://brew.sh):
 ```
@@ -651,8 +653,8 @@ This will automatically perform the following steps:
 
 You can provide the following options to `make.bat` when running the `build` or `test` commands:
 
-- `--config debug|release`: whether or not to build a debug or release build (debug is the default).
-- `--llvm <version>`: the LLVM version to build against (3.9.1 is the default).
+- `--config debug|release`: whether or not to build a debug or release build (`release` is the default).
+- `--llvm <version>`: the LLVM version to build against (`5.0.0` is the default).
 
 Note that you need to provide these options each time you run make.bat; the system will not remember your last choice.
 

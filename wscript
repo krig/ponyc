@@ -42,9 +42,9 @@ MSVC_VERSIONS = [ '15.4', '15.0', '14.0' ]
 
 # keep these in sync with the list in .appveyor.yml
 LLVM_VERSIONS = [
-    '3.9.1',
-    '3.8.1',
-    '3.7.1'
+    '5.0.0',
+    '4.0.1',
+    '3.9.1'
 ]
 
 WINDOWS_LIBS_TAG = "v1.5.0"
