@@ -14,7 +14,13 @@
 
 
 class CodegenTest : public PassTest
-{};
+{
+  virtual void SetUp()
+  {
+    PassTest::SetUp();
+    set_builtin(NULL);
+  }
+};
 
 
 TEST_F(CodegenTest, PackedStructIsPacked)
@@ -152,4 +158,99 @@ TEST_F(CodegenTest, CCallback)
   int exit_code = 0;
   ASSERT_TRUE(run_program(&exit_code));
   ASSERT_EQ(exit_code, 6);
+}
+
+extern "C"
+{
+
+EXPORT_SYMBOL void *test_custom_serialisation_get_object() {
+  uint64_t *i = (uint64_t *) malloc(sizeof(uint64_t));
+  *i = 0xDEADBEEF10ADBEE5;
+  return i;
+}
+
+EXPORT_SYMBOL void test_custom_serialisation_serialise(uint64_t *p, unsigned char *bytes) {
+  *(uint64_t *)(bytes) = *p;
+}
+
+EXPORT_SYMBOL void *test_custom_serialisation_deserialise(unsigned char *bytes) {
+  uint64_t *p = (uint64_t *) malloc(sizeof(uint64_t));
+  *p = *(uint64_t *)(bytes);
+  return p;
+}
+
+EXPORT_SYMBOL char test_custom_serialisation_compare(uint64_t *p1, uint64_t *p2) {
+  return *p1 == *p2;
+}
+
+}
+
+TEST_F(CodegenTest, Cast)
+{
+  const char* src =
+    "actor Main\n"
+    "  new create(env: Env) =>\n"
+    "    let x: Any ref = String()\n"
+    "    try\n"
+    "      let y = x as String ref\n"
+    "    end\n";
+  TEST_COMPILE(src);
+
+  int exit_code = 0;
+  ASSERT_TRUE(run_program(&exit_code));
+  ASSERT_EQ(exit_code, 0);
+}
+
+TEST_F(CodegenTest, CustomSerialization)
+{
+  const char* src =
+    "use \"serialise\"\n"
+
+    "class _Custom\n"
+    "  let s1: String = \"abc\"\n"
+    "  var p: Pointer[U8]\n"
+    "  let s2: String = \"efg\"\n"
+
+    "  new create() =>\n"
+    "    p = @test_custom_serialisation_get_object[Pointer[U8] ref]()\n"
+
+    "  fun _serialise_space(): USize =>\n"
+    "    8\n"
+
+    "  fun _serialise(bytes: Pointer[U8]) =>\n"
+    "    @test_custom_serialisation_serialise[None](p, bytes)\n"
+
+    "  fun ref _deserialise(bytes: Pointer[U8]) =>\n"
+    "    p = @test_custom_serialisation_deserialise[Pointer[U8] ref](bytes)\n"
+
+    "  fun eq(c: _Custom): Bool =>\n"
+    "    (@test_custom_serialisation_compare[U8](this.p, c.p) == 1) and\n"
+    "    (this.s1 == c.s1)\n"
+    "      and (this.s2 == c.s2)\n"
+
+    "actor Main\n"
+    "  new create(env: Env) =>\n"
+    "    try\n"
+    "      let ambient = env.root as AmbientAuth\n"
+    "      let serialise = SerialiseAuth(ambient)\n"
+    "      let deserialise = DeserialiseAuth(ambient)\n"
+
+    "      let x: _Custom = _Custom\n"
+    "      let sx = Serialised(serialise, x)\n"
+    "      let yd: Any ref = sx(deserialise)\n"
+    "      let y = yd as _Custom\n"
+    "      let r: I32 = if (x isnt y) and (x == y) then\n"
+    "        1\n"
+    "      else\n"
+    "        0\n"
+    "      end\n"
+    "      @pony_exitcode[None](r)\n"
+    "    end"
+    ;
+
+  TEST_COMPILE(src);
+
+  int exit_code = 0;
+  ASSERT_TRUE(run_program(&exit_code));
+  ASSERT_EQ(exit_code, 1);
 }
