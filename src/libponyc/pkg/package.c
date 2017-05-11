@@ -682,6 +682,9 @@ bool package_init(pass_opt_t* opt)
   add_path("/opt/local/lib");
 #endif
 
+  // SUSE: Add /usr/lib/pony/packages to list of paths to search
+  add_path("/usr/lib/pony/packages");
+
   // Convert all the safe packages to their full paths.
   strlist_t* full_safe = NULL;
 
