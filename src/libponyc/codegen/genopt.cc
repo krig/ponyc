@@ -186,7 +186,7 @@ public:
       begin);
 #else
     AllocaInst* replace = new AllocaInst(builder.getInt8Ty(),
-      (unsigned int)int_size->getZExtValue(), "", begin);
+      0, int_size, "", begin);
 #endif
 
     replace->setDebugLoc(call->getDebugLoc());
