@@ -192,7 +192,9 @@ public:
     replace->setDebugLoc(call->getDebugLoc());
     inst->replaceAllUsesWith(replace);
 
-#if PONY_LLVM >= 400
+#if PONY_LLVM < 400
+    (void)f;
+#else
     if (call.isInvoke())
     {
       InvokeInst *invoke = cast<InvokeInst>(call.getInstruction());
