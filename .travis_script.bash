@@ -63,14 +63,6 @@ ponyc-build-docs(){
 
 case "${TRAVIS_OS_NAME}:${LLVM_CONFIG}" in
 
-  "linux:llvm-config-3.7")
-    ponyc-test
-  ;;
-
-  "linux:llvm-config-3.8")
-    ponyc-test
-  ;;
-
   "linux:llvm-config-3.9")
     # when FAVORITE_CONFIG stops matching part of this case, move this logic
     if [[ "$TRAVIS_BRANCH" == "release" && "$TRAVIS_PULL_REQUEST" == "false" && "$FAVORITE_CONFIG" == "yes" ]]
@@ -88,14 +80,6 @@ case "${TRAVIS_OS_NAME}:${LLVM_CONFIG}" in
   ;;
 
   "linux:llvm-config-5.0")
-    ponyc-test
-  ;;
-
-  "osx:llvm-config-3.7")
-    ponyc-test
-  ;;
-
-  "osx:llvm-config-3.8")
     ponyc-test
   ;;
 
