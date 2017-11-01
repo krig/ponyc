@@ -81,7 +81,7 @@ case "${TRAVIS_OS_NAME}:${LLVM_CONFIG}" in
     brew install libressl
 
     brew install llvm@4
-    brew link --overwrite --force llvm
+    brew link --overwrite --force llvm@4
     mkdir llvmsym
     ln -s "$(which llvm-config)" llvmsym/llvm-config-4.0
     ln -s "$(which clang++)" llvmsym/clang++-4.0
@@ -99,7 +99,7 @@ case "${TRAVIS_OS_NAME}:${LLVM_CONFIG}" in
     brew install libressl
 
     brew install llvm@5
-    brew link --overwrite --force llvm
+    brew link --overwrite --force llvm@5
     mkdir llvmsym
     ln -s "$(which llvm-config)" llvmsym/llvm-config-5.0
     ln -s "$(which clang++)" llvmsym/clang++-5.0
