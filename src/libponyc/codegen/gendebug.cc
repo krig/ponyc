@@ -111,8 +111,15 @@ LLVMMetadataRef LLVMDIBuilderCreateNamespace(LLVMDIBuilderRef d,
   LLVMMetadataRef scope, const char* name, LLVMMetadataRef file, unsigned line)
 {
   DIBuilder* pd = unwrap(d);
+#if PONY_LLVM >= 400
+  return wrap(pd->createNameSpace(unwrap<DIScope>(scope), name, 
+    unwrap<DIFile>(file), line,
+    // ExportSymbols (only relevant for C++ anonymous namespaces)
+    false));
+#else
   return wrap(pd->createNameSpace(unwrap<DIScope>(scope), name, 
     unwrap<DIFile>(file), line));
+#endif
 }
 
 #endif
